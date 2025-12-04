@@ -12,41 +12,42 @@ O **Task Control** é um aplicativo para gerenciamento de tarefas que permite ao
 ## 🚀 Requisitos Atendidos
 
 ### 1. Estratégia de Navegação 
-O projeto utiliza a biblioteca **React Navigation** com a estratégia **Native Stack** (`@react-navigation/native-stack`). Isso permite empilhar telas, onde uma nova tela é colocada sobre a anterior, criando uma navegação fluida e nativa.
+O projeto foi migrado para utilizar o **Expo Router**, que utiliza uma estratégia de roteamento baseada em arquivos (File-based routing), similar ao Next.js. Isso simplifica a navegação e a estrutura do projeto.
 
 **Onde encontrar no código:**
-- Arquivo: `App.tsx`
-- O `NavigationContainer` envolve toda a aplicação.
-- O `Stack.Navigator` define as rotas disponíveis: `FormularioTarefa` e `ResumoTarefa`.
+- Arquivo: `app/_layout.tsx`
+- O diretório `app/` define as rotas da aplicação.
+- O arquivo `_layout.tsx` configura a pilha de navegação (`Stack`).
 
 ```tsx
-// Exemplo simplificado do App.tsx
-<NavigationContainer>
-  <Stack.Navigator>
-    <Stack.Screen name="FormularioTarefa" component={FormularioTarefaScreen} />
-    <Stack.Screen name="ResumoTarefa" component={ResumoTarefaScreen} />
-  </Stack.Navigator>
-</NavigationContainer>
+// Exemplo simplificado do app/_layout.tsx
+<Stack>
+  <Stack.Screen name="index" options={{ headerShown: false }} />
+  <Stack.Screen name="tarefas/criar" options={{ title: "Nova Tarefa" }} />
+  <Stack.Screen name="resumo-tarefa" options={{ title: "Resumo" }} />
+</Stack>
 ```
 
 ### 2. Passagem e Tratamento de Parâmetros
-Os dados preenchidos no formulário são enviados para a tela de resumo através da função `navigation.navigate`.
+Os dados preenchidos no formulário são enviados para a tela de resumo através da função `router.push` do Expo Router.
 
-**Envio (FormularioTarefaScreen.tsx):**
-Ao clicar em "Criar Tarefa", os estados `titulo`, `descricao` e `status` são passados como um objeto.
+**Envio (app/tarefas/criar.tsx):**
+Ao clicar em "Criar Tarefa", os estados `titulo`, `descricao` e `status` são passados como parâmetros na URL/rota.
 ```tsx
-navigation.navigate("ResumoTarefa", {
-  titulo,
-  descricao,
-  status,
+router.push({
+  pathname: "/resumo-tarefa",
+  params: {
+    titulo,
+    descricao,
+    status,
+  },
 });
 ```
 
-**Recebimento (ResumoTarefaScreen.tsx):**
-Na tela de destino, usamos o hook `useRoute` para acessar os parâmetros recebidos (`route.params`).
+**Recebimento (app/resumo-tarefa.tsx):**
+Na tela de destino, usamos o hook `useLocalSearchParams` para acessar os parâmetros recebidos.
 ```tsx
-const route = useRoute<ResumoTarefaRouteProp>();
-const { titulo, descricao, status } = route.params;
+const { titulo, descricao, status } = useLocalSearchParams();
 ```
 
 ### 3. Componentes Utilizados
@@ -70,9 +71,10 @@ O layout foi construído utilizando **Flexbox** para alinhamento e distribuiçã
 
 ## 📂 Estrutura de Arquivos Importantes
 
-- `App.tsx`: Configuração principal da navegação.
-- `src/screens/FormularioTarefaScreen.tsx`: Tela inicial com o formulário de cadastro.
-- `src/screens/ResumoTarefaScreen.tsx`: Tela de detalhes que exibe os dados cadastrados.
+- `app/_layout.tsx`: Configuração principal do layout e rotas.
+- `app/index.tsx`: Redirecionamento inicial.
+- `app/tarefas/criar.tsx`: Tela com o formulário de cadastro de tarefas.
+- `app/resumo-tarefa.tsx`: Tela de detalhes que exibe os dados cadastrados.
 
 ---
 
