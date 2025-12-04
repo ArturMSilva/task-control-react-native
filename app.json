@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "my-app",
+  "scheme": "task-control",
     "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,6 +13,9 @@
     "android": {
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
